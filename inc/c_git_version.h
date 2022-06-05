@@ -11,6 +11,8 @@ extern const char *c_git_version(void);
 
 extern const char *c_git_branch(void);
 
+extern const char *c_git_submodules(void);
+
 #ifdef __cplusplus
 }
 #endif

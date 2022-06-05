@@ -32,12 +32,30 @@ execute_process(
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
+execute_process(
+    COMMAND "${GIT_EXECUTABLE}" submodule status
+    WORKING_DIRECTORY "${CGV_TOPDIR}"
+    OUTPUT_VARIABLE CGV_SUBMODULES
+    RESULT_VARIABLE CGV_SUBMODULES_ERR
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+
 message(STATUS "Version: ${CGV_VERSION}  (err=${CGV_VERSION_ERR})")
 message(STATUS "Hash: ${CGV_HASH}  (err=${CGV_HASH_ERR})")
 message(STATUS "Branch: ${CGV_BRANCH}  (err=${CGV_BRANCH_ERR})")
+message(STATUS "Submodules (err=${CGV_SUBMODULES_ERR}):\n${CGV_SUBMODULES}")
 
-if (${CGV_VERSION_ERR} OR ${CGV_HASH_ERR} OR {CGV_BRANCH_ERR})
-    message(FATAL_ERROR "Failed to read: version=${CGV_VERSION_ERR}, hash=${CGV_HASH_ERR}, branch=${CGV_BRANCH_ERR}")
+string(REPLACE ";" "" CGV_SUBMODULES "${CGV_SUBMODULES}")
+string(REPLACE "\n" ";" CGV_SUBMODULES "${CGV_SUBMODULES}")
+set(CGV_SUBMODULES_STATUS "\"\"")
+foreach(I IN LISTS CGV_SUBMODULES)
+    string(STRIP "${I}" I)
+    string(APPEND CGV_SUBMODULES_STATUS " \\\n\"${I}\\n\"")
+endforeach()
+
+if (${CGV_VERSION_ERR} OR ${CGV_HASH_ERR} OR ${CGV_BRANCH_ERR} OR ${CGV_SUBMODULES_ERR})
+    message(FATAL_ERROR "Failed to read: version=${CGV_VERSION_ERR}, hash=${CGV_HASH_ERR}, branch=${CGV_BRANCH_ERR}, submodules=${CGV_SUBMODULES_ERR}")
 endif()
 
 configure_file("${CGV_SOURCE_DIR}/src/c_git_version.c.in" "${CGV_BUILD_DIR}/c_git_version.c" @ONLY)
