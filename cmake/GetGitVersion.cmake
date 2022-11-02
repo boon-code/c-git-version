@@ -8,7 +8,7 @@ elseif (NOT DEFINED CGV_BUILD_DIR)
     message(FATAL_ERROR "Build directory is not set: CGV_BUILD_DIR=${CGV_BUILD_DIR}")
 endif()
 
-message(DEBUG "GetGitVersion: topdir=${CGV_TOPDIR} src=${CGV_SOURCE_DIR} build=${CGV_BUILD_DIR}")
+message(STATUS "GetGitVersion: topdir=${CGV_TOPDIR} src=${CGV_SOURCE_DIR} build=${CGV_BUILD_DIR}")
 
 execute_process(
     COMMAND "${GIT_EXECUTABLE}" describe --always --tags --dirty=-modified
