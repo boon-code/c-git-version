@@ -1,10 +1,14 @@
+cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
-#work around if CMAKE_CURRENT_FUNCTION_LIST_DIR is not
-#available (CMake 3.17)
 set(_C_GIT_VERSION_CMAKE_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
 
-function(add_doxygen_version_hook doxygenTarget)
+function(cgv_add_subdirectory)
+    add_subdirectory("${_C_GIT_VERSION_CMAKE_DIR}/..")
+endfunction()
+
+
+function(cgv_doxygen_add_version_hook doxygenTarget)
     set(_hookname "doxygen_version_hook.${doxygenTarget}")
     set(_doxy_tpl "${CMAKE_BINARY_DIR}/Doxyfile.${doxygenTarget}")
 
